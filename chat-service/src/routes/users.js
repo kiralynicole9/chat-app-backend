@@ -1,13 +1,15 @@
+const userRepository = require("../repository/user-repository.js");
 const router = require("express").Router();
-const inMemoryDb = require("../data/inMemoryDB.js").inMemoryDb
-
-console.log(inMemoryDb);
-const users = inMemoryDb.users;
+const users = userRepository
 
 
 const createUser = (user) => {
     const userId = users.length + 1;
-    users.push({...user, userId});
+    users.insert({
+        username: user.username,
+        password: user.password,
+        email: user.email,
+    });
     return user;
 }
 
@@ -17,10 +19,13 @@ router.use((req, res, next) => {
     next();
 })
 
-router.get("/:userId?", (req, res) => {
+router.get("/:userId?", async (req, res) => {
     const {userId, ...userParams} = req.params;
     if(userId) {
-        const user = users.find((user) =>  user.userId === parseFloat(userId))
+        const user = await users.select({
+            id: parseFloat(userId),
+        });
+        console.log(user, 'sss')
         res.json(user);
         return;
     }

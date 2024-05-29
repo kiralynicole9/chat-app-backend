@@ -1,0 +1,21 @@
+services:
+  chat-app-service: 
+    build: ./chat-service
+    volumes:
+      - ./chat-service:/app
+    ports:
+      - "3000:3000"
+    depends_on:
+      - db
+  db:
+    build: ./db
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: root
+      POSTGRES_DB: chatapp
+  adminer:
+    image: adminer
+    ports:
+      - "8080:8080"

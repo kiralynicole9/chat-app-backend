@@ -1,7 +1,5 @@
 const router = require("express").Router();
-const inMemoryDB = require("../data/inMemoryDB.js").inMemoryDb;
-
-const messages = inMemoryDB.messages;
+const messages = require('../repository/message-repository.js');
 
 router.use((req,res,next) => {
     console.log("messageRouter: ");
@@ -12,29 +10,25 @@ router.use((req,res,next) => {
 const createMessage = (message) => {
     message.from = parseFloat(message.from);
     message.to = parseFloat(message.to);
-    messages.push(message);
+    messages.insert({from_users: message.from, to_users: message.to, message: message.message});
 
     return message;
 }
 
 
-router.get("/", (req,res) => { 
+router.get("/", async (req,res) => { 
     console.log(req.query);
     const {from, to} = req.query
     if(from && to){
-       const filteredMessages = messages.filter((message) => {
-            if(from == message.from && to == message.to){
-                return true;
-            }
-            if(to == message.from && from == message.to){
-                return true;
-            }
-        })
+       const filteredMessages = (await messages.select({
+        from_users: from,
+        to_users: to,
+       }))
         res.json(filteredMessages);
         return;
     }
-    console.log(messages);
-    res.json(messages);
+
+    res.json(await messages.select());
 })
 
 router.post("/", (req,res) => {

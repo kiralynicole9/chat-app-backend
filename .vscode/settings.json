@@ -1,0 +1,5 @@
+{
+    "rcd": {
+        "services": ["chat-app-service"]
+    }
+}
