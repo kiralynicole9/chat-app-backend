@@ -9,7 +9,7 @@ router.use((req,res,next) => {
 router.post("/", async (req,res) => {
     console.log(req.body);
     const user = await usersRepository.select({
-        username: req.body.email,
+        email: req.body.email,
         password: req.body.password,
     });
 
@@ -17,7 +17,7 @@ router.post("/", async (req,res) => {
     if(!user) {
         res.sendStatus(401);
     }
-    res.send(user);
+    res.send(user[0]);
 })
 
 

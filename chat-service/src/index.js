@@ -10,14 +10,14 @@ const postgres = require("./databases/postgres");
 
 const app = express();
 
-app.use(express.json())
+app.use(express.json())    
 
 app.use((req,res,next)=>{
     res.append("Access-Control-Allow-Origin", "http://localhost:5173")
     res.append("Access-Control-Allow-Methods", "*")
     res.append("Access-Control-Allow-Headers", "*")
     next();
-})
+}) 
 
 
 app.listen(3000, ()=> {

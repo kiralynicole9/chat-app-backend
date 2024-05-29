@@ -19,7 +19,13 @@ module.exports = {
             return acc ? this.db`${acc} AND ${this.db(curr)}=${data[curr]}`: this.db`${this.db(curr)}=${data[curr]}`;
         }, '')
 
-        return await this.db`SELECT * FROM ${this.db(table)} WHERE ${where}`;
+        if (where) {
+            return await this.db`SELECT * FROM ${this.db(table)} WHERE ${where}`;
+        } else {
+            return await this.db`SELECT * FROM ${this.db(table)}`;
+        }    
+
+        //return await this.db`SELECT * FROM ${this.db(table)} ${this.db(where ? `WHERE ${where} }` : 'where 1=1' )}`
     },
 
     async insert(table, data) {

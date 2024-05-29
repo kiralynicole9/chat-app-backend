@@ -7,22 +7,23 @@ router.use((req,res,next) => {
 })
 
 
-const createMessage = (message) => {
-    message.from = parseFloat(message.from);
-    message.to = parseFloat(message.to);
-    messages.insert({from_users: message.from, to_users: message.to, message: message.message});
+const createMessage = async (message) => {
 
-    return message;
+    const savedMessage = await messages.insert({
+        from_users: message.from_users,
+        to_users: message.to_users,
+        message: message.text});
+    return savedMessage;
 }
 
 
 router.get("/", async (req,res) => { 
     console.log(req.query);
-    const {from, to} = req.query
-    if(from && to){
+    const {from_users, to_users} = req.query
+    if(from_users && to_users){
        const filteredMessages = (await messages.select({
-        from_users: from,
-        to_users: to,
+        from_users: from_users,
+        to_users: to_users,
        }))
         res.json(filteredMessages);
         return;

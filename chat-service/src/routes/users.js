@@ -9,6 +9,8 @@ const createUser = (user) => {
         username: user.username,
         password: user.password,
         email: user.email,
+        firstname: user.firstName,
+        lastname: user.lastName
     });
     return user;
 }
@@ -29,8 +31,8 @@ router.get("/:userId?", async (req, res) => {
         res.json(user);
         return;
     }
-
-    res.json(users);
+    const allUsers = await users.select();
+    res.json(allUsers);
 })
 
 router.post("/", (req, res) => {
