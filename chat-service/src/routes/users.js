@@ -28,7 +28,7 @@ router.get("/:userId?", async (req, res) => {
             id: parseFloat(userId),
         });
         console.log(user, 'sss')
-        res.json(user);
+        res.json(user[0]);
         return;
     }
     const allUsers = await users.select();

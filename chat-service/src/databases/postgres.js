@@ -15,6 +15,20 @@ module.exports = {
     },
 
     async select(table, data) {
+
+        if (data instanceof Array) {
+            const wheress = data.map((item, index) => {
+                const fields = Object.keys(item);
+                return fields.reduce((acc, curr, key, arr) => {
+                    return acc ? this.db`${acc} AND ${this.db(curr)}=${item[curr]}` : this.db`${this.db(curr)}=${item[curr]}`;
+                }, '')
+            }).reduce((acc, curr, key, arr) => {
+                return acc ? this.db`${acc} OR ${this.db`${curr}`}` : this.db`${curr}`;
+            });
+    
+            return await this.db`SELECT * FROM ${this.db(table)} WHERE ${this.db`${wheress}`}`;
+        }
+
         const where = Object.keys(data || {})?.reduce((acc, curr, key, arr) => {
             return acc ? this.db`${acc} AND ${this.db(curr)}=${data[curr]}`: this.db`${this.db(curr)}=${data[curr]}`;
         }, '')
@@ -24,8 +38,6 @@ module.exports = {
         } else {
             return await this.db`SELECT * FROM ${this.db(table)}`;
         }    
-
-        //return await this.db`SELECT * FROM ${this.db(table)} ${this.db(where ? `WHERE ${where} }` : 'where 1=1' )}`
     },
 
     async insert(table, data) {
