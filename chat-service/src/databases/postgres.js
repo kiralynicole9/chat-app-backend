@@ -45,14 +45,17 @@ module.exports = {
         console.log('data', data);
         const fields = Object.keys(data);
 
-        return this.db`INSERT INTO ${this.db(table)} ${this.db(data, fields)}`;
+        const savedData = await this.db`INSERT INTO ${this.db(table)} ${this.db(data, fields)} returning id`;
+        return savedData[0];
     },
 
     async delete(table, where) {
         return this.db`DELETE FROM ${table} WHERE ${where}`;
     },
 
-    async update(table, where) {
-        return this.db`UPDATE ${table} SET ${fields} WHERE ${where}`;
+    async update(table, data) {
+        const {id, ...restData} = data;
+        const fields = Object.keys(restData);
+        return this.db`UPDATE ${this.db(table)} SET ${this.db(restData, fields)} WHERE id = ${id}`;
     }
 }

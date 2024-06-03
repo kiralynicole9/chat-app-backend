@@ -1,20 +1,12 @@
 const router = require("express").Router();
 const messages = require('../repository/message-repository.js');
+const notificationRepository = require("../repository/notification-repository.js");
 
 router.use((req,res,next) => {
     console.log("messageRouter: ");
     next();
 })
 
-
-const createMessage = async (message) => {
-
-    const savedMessage = await messages.insert({
-        from_users: message.from_users,
-        to_users: message.to_users,
-        message: message.text});
-    return savedMessage;
-}
 
 
 router.get("/", async (req,res) => { 
@@ -45,7 +37,7 @@ router.get("/", async (req,res) => {
 })
 
 router.post("/", (req,res) => {
-    const message = createMessage(req.body);
+    const message = messages.createMessage(req.body);
     console.log(message)
     res.send(message);
 })
