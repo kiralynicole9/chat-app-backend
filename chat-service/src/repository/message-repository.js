@@ -1,5 +1,6 @@
 const notificationRepository = require("./notification-repository");
 const repository = require("./repository");
+const ws = require("../ws");
 
 const messageRepository = Object.create(repository);
 messageRepository.select = async function (where) {
@@ -16,6 +17,15 @@ messageRepository.insert = async function (values) {
 
 messageRepository.delete = async function (where) {
     return this.db.delete('messages', where);
+}
+messageRepository.countFromUserMessages = async function(userId){
+    const results = await this.db.query`
+    SELECT COUNT(messages.id) as messages, from_users 
+    FROM messages 
+    WHERE messages.to_users = ${userId} 
+    AND messages.has_been_read is NULL
+    GROUP BY messages.from_users;`
+    return results;
 }
 
 messageRepository.createMessage = async (message) => {

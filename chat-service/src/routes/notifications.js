@@ -1,6 +1,7 @@
 const router = require("express").Router();
 const notificationRepository = require('../repository/notification-repository.js');
 const userRepository = require("../repository/user-repository.js");
+const ws = require("../ws.js");
 
 
 router.use((req,res,next) => {
@@ -35,7 +36,12 @@ router.patch("/:id", async (req, res) => {
     console.log(req.body, "HERE");
     try{
         const updateFields = {id: req.params.id, ...req.body};
-        const notification = await notificationRepository.update({...updateFields})
+        await notificationRepository.update({...updateFields})
+        const notification = await notificationRepository.select({id: req.params.id})
+        ws.sendTo(notification[0]?.to_user, {
+            type: "read_notification"
+        })
+        console.log()
         res.send(updateFields);
     }catch(e){
         res.statusCode = 500;

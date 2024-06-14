@@ -10,6 +10,7 @@ module.exports = {
             port: 5432,
             database: 'chatapp',
         });
+        this.query = this.db;
         
         return this;
     },
@@ -26,7 +27,7 @@ module.exports = {
                 return acc ? this.db`${acc} OR ${this.db`${curr}`}` : this.db`${curr}`;
             });
     
-            return await this.db`SELECT * FROM ${this.db(table)} WHERE ${this.db`${wheress}`}`;
+            return await this.db`SELECT * FROM ${this.db(table)} WHERE ${this.db`${wheress}`} ORDER BY id`;
         }
 
         const where = Object.keys(data || {})?.reduce((acc, curr, key, arr) => {
@@ -34,9 +35,9 @@ module.exports = {
         }, '')
 
         if (where) {
-            return await this.db`SELECT * FROM ${this.db(table)} WHERE ${where}`;
+            return await this.db`SELECT * FROM ${this.db(table)} WHERE ${where} ORDER BY id`;
         } else {
-            return await this.db`SELECT * FROM ${this.db(table)}`;
+            return await this.db`SELECT * FROM ${this.db(table)} ORDER BY id`;
         }    
     },
 
@@ -56,6 +57,7 @@ module.exports = {
     async update(table, data) {
         const {id, ...restData} = data;
         const fields = Object.keys(restData);
+        console.log(`UPDATE ${this.db(table)} SET ${this.db(restData, fields)} WHERE id = ${id}`);
         return this.db`UPDATE ${this.db(table)} SET ${this.db(restData, fields)} WHERE id = ${id}`;
     }
 }
