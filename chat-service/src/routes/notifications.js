@@ -17,7 +17,7 @@ router.get("/", async (req,res) => {
         return;
     }
     try{
-        const notifications = (await notificationRepository.select({to_user: req.query.user, has_been_read: 0}));
+        const notifications = (await notificationRepository.select({to_user: req.query.user, has_been_read: null}));
         for(const notification of notifications){
             const {email, password, ...user} = (await userRepository.select({id: notification.from_user}))[0];
             notification.from_user = user;

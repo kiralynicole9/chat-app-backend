@@ -12,20 +12,25 @@ const onMessage = (data, cookies)=>{
                 from_users: cookies.user,
                 to_users: payload.data.to_user,
                 text: payload.data.message
-            })
+            });
             const message = await messages.select({id: savedMessage.id});
-
-            console.log(message, "messaage");
-            console.log(savedMessage);
             const messageSendData = {
                 type: "new_message",
                 message
             }
+
             const notificationSendData = {
                 type: "new_notification"
             }
+
+            const messageCountSendData = {
+                type: "new_message_count",
+                from_user: parseFloat(cookies.user),
+            }
+
             ws.connections[payload.data.to_user]?.send(JSON.stringify(notificationSendData));
             ws.connections[payload.data.to_user]?.send(JSON.stringify(messageSendData));
+            ws.connections[payload.data.to_user]?.send(JSON.stringify(messageCountSendData));
             
 
             console.log(ws.connections[payload.data.to_user]);
@@ -85,7 +90,7 @@ router.patch("/:id", async (req, res) => {
         id,
         ...result
     })
-    const message = await messages.select({id})[0]
+    const message = (await messages.select({id}))[0]
     res.send(message);
 })
 

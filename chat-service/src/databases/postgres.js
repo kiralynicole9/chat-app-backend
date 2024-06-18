@@ -21,6 +21,9 @@ module.exports = {
             const wheress = data.map((item, index) => {
                 const fields = Object.keys(item);
                 return fields.reduce((acc, curr, key, arr) => {
+                    if (item[curr] === null) {
+                        return acc ? this.db`${acc} AND ${this.db(curr)} IS NULL` : this.db`${this.db(curr)} IS NULL`;
+                    }
                     return acc ? this.db`${acc} AND ${this.db(curr)}=${item[curr]}` : this.db`${this.db(curr)}=${item[curr]}`;
                 }, '')
             }).reduce((acc, curr, key, arr) => {
@@ -31,6 +34,9 @@ module.exports = {
         }
 
         const where = Object.keys(data || {})?.reduce((acc, curr, key, arr) => {
+            if (data[curr] === null) {
+                return acc ? this.db`${acc} AND ${this.db(curr)} IS NULL` : this.db`${this.db(curr)} IS NULL`;
+            }
             return acc ? this.db`${acc} AND ${this.db(curr)}=${data[curr]}`: this.db`${this.db(curr)}=${data[curr]}`;
         }, '')
 

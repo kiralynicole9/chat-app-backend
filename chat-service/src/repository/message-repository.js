@@ -20,10 +20,11 @@ messageRepository.delete = async function (where) {
 }
 messageRepository.countFromUserMessages = async function(userId){
     const results = await this.db.query`
-    SELECT COUNT(messages.id) as messages, from_users 
+    SELECT CAST(COUNT(messages.id) as INTEGER) as messages, from_users 
     FROM messages 
     WHERE messages.to_users = ${userId} 
-    AND messages.has_been_read is NULL
+    AND (messages.has_been_read is NULL
+    OR messages.has_been_read = 0)
     GROUP BY messages.from_users;`
     return results;
 }
