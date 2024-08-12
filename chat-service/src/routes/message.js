@@ -8,11 +8,20 @@ const onMessage = (data, cookies)=>{
     const payload = JSON.parse(data);
     if(payload.type === "send_message"){
         (async () => {
-           const savedMessage = await messages.createMessage({
-                from_users: cookies.user,
-                to_users: payload.data.to_user,
-                text: payload.data.message
-            });
+            if(payload.data.to_user){
+                const savedMessage = await messages.createMessage({
+                     from_users: cookies.user,
+                     to_users: payload.data.to_user,
+                     text: payload.data.message,
+                     in_channel: payload.data.is_in_channel
+                 });
+            }else {
+                const savedMessage = await messages.createMessage({
+                    from_users: cookies.user,
+                    text: payload.data.message,
+                    in_channel: payload.data.is_in_channel
+                });
+            }
             const message = await messages.select({id: savedMessage.id});
             const messageSendData = {
                 type: "new_message",
@@ -63,6 +72,13 @@ router.get("/", async (req,res) => {
         ]))
             res.json(filteredMessages);
             return;
+        }else if(from_users){
+            const filteredMessages = (await messages.select([{
+                from_users: from_users,
+               }
+            ]))
+                res.json(filteredMessages);
+                return;
         }
     
         const data = await messages.select();
@@ -74,9 +90,23 @@ router.get("/", async (req,res) => {
     }
 })
 
-router.post("/", (req,res) => {
-    const message = messages.createMessage(req.body);
-    console.log(message)
+router.get("/:id", async(req, res) => {
+    const {id} = req.params;
+    if (id) {
+        const message = await messages.select({
+            id: parseFloat(id)
+        });
+        console.log(message, 'getIdddd');
+        res.json(message[0]);
+        return;
+    }
+    const allMessages = await messages.select();
+    res.json(allMessages);
+})
+
+router.post("/", async (req,res) => {
+    const message = await messages.createMessage(req.body);
+    console.log(message, "postt")
     res.send(message);
 })
 

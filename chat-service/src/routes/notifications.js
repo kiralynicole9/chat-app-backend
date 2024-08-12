@@ -17,16 +17,17 @@ router.get("/", async (req,res) => {
         return;
     }
     try{
-        const notifications = (await notificationRepository.select({to_user: req.query.user, has_been_read: null}));
+        const notifications = (await notificationRepository.select({to_user: req.query.user, has_been_read: 0}));
         for(const notification of notifications){
             const {email, password, ...user} = (await userRepository.select({id: notification.from_user}))[0];
             notification.from_user = user;
         }
+        console.log("notificationsss", notifications)
         res.json(notifications);
         return; 
 
     }catch(e){
-        res.statusCode(500);
+        res.status(500);
         res.send(e.message);
     }   
 })
@@ -44,7 +45,7 @@ router.patch("/:id", async (req, res) => {
         console.log()
         res.send(updateFields);
     }catch(e){
-        res.statusCode = 500;
+        res.status(500);
         res.send(e.message);
     }
 })

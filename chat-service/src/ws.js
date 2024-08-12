@@ -25,9 +25,7 @@ module.exports = {
             connection.send(JSON.stringify(data));
         })
     },
-    connections: {
-
-    },
+    connections: {},
     messageListeners: [],
     createWsServer(server){
         const ws = new WebSocketServer({

@@ -8,10 +8,16 @@ const loginRouter = require("./routes/login");
 const logoutRouter = require("./routes/logout")
 const messageRouter = require("./routes/message");
 const notificationRouter = require("./routes/notifications");
+const channelMembersRouter = require("./routes/channel-members")
+const channelsRouter = require("./routes/channels")
+const channelMessagesRouter = require("./routes/channel-messages")
 const repository = require("./repository/repository");
 const inMemoryDB = require("./databases/inMemoryDB");
 const postgres = require("./databases/postgres");
 const messageRepository = require("./repository/message-repository");
+const channelsRepository = require("./repository/channels-repository")
+const channelMembersRepository = require("./repository/channel-members-repository")
+const channelMessagesRepository = require("./repository/channel-messages-repository");
 const ws  = require("./ws");
 
 const app = express();
@@ -36,8 +42,6 @@ server.on("upgrade", (req, socket, head) => {
     //socket.destroy();
 })
 
-
-
 server.listen(3000, (e)=> {
     console.log(ws, "eee");
     console.log("Server is running.");
@@ -47,8 +51,12 @@ server.listen(3000, (e)=> {
 
     })();
 })
+
 app.use("/users", usersRouter);
 app.use("/login", loginRouter);
 app.use("/messages", messageRouter);
 app.use("/notifications", notificationRouter);
+app.use("/channels", channelsRouter)
+app.use("/channel-members", channelMembersRouter);
+app.use("/channel-messages", channelMessagesRouter)
 app.use("/logout", logoutRouter);

@@ -2,6 +2,7 @@ const userRepository = require("../repository/user-repository.js");
 const ws = require("../ws.js");
 const router = require("express").Router();
 const users = userRepository
+// const formidable = require("formidable")
 
 
 const createUser = (user) => {
@@ -60,9 +61,18 @@ router.patch("/:userId?", async (req, res) => {
         console.log(user, "444");
         res.send(user);
     }catch(e){
-        res.statusCode = 500;
+        res.status(500);
         res.send(e.message);
     }
+})
+
+router.post("/file/:id", (req,res) => {
+    console.log(req);
+    // const form = formidable({})
+    // form.parse(req, (err, fields, files) => {
+    //     console.log(fields, files);
+    // })
+    res.send()
 })
 
 

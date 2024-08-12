@@ -41,9 +41,9 @@ module.exports = {
         }, '')
 
         if (where) {
-            return await this.db`SELECT * FROM ${this.db(table)} WHERE ${where} ORDER BY id`;
+            return await this.db`SELECT * FROM ${this.db(table)} WHERE ${where}`;
         } else {
-            return await this.db`SELECT * FROM ${this.db(table)} ORDER BY id`;
+            return await this.db`SELECT * FROM ${this.db(table)}`;
         }    
     },
 
@@ -51,9 +51,14 @@ module.exports = {
 
         console.log('data', data);
         const fields = Object.keys(data);
+        try{
+            const savedData = await this.db`INSERT INTO ${this.db(table)} ${this.db(data, fields)} returning id`;
+            return savedData[0];
 
-        const savedData = await this.db`INSERT INTO ${this.db(table)} ${this.db(data, fields)} returning id`;
-        return savedData[0];
+        }catch(e){
+            const savedData = await this.db`INSERT INTO ${this.db(table)} ${this.db(data, fields)}`;
+            return savedData[0];
+        }
     },
 
     async delete(table, where) {
@@ -66,4 +71,6 @@ module.exports = {
         console.log(`UPDATE ${this.db(table)} SET ${this.db(restData, fields)} WHERE id = ${id}`);
         return this.db`UPDATE ${this.db(table)} SET ${this.db(restData, fields)} WHERE id = ${id}`;
     }
+    
+    
 }

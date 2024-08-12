@@ -30,20 +30,33 @@ messageRepository.countFromUserMessages = async function(userId){
 }
 
 messageRepository.createMessage = async (message) => {
+    console.log(message, "create messagee");
+    let savedMessage;
 
-    const savedMessage = await messageRepository.insert({
-        from_users: parseFloat(message.from_users),
-        to_users: parseFloat(message.to_users),
-        message: message.text
-    });
+    if(message.to_users){
+        savedMessage = await messageRepository.insert({
+            from_users: parseFloat(message.from_users),
+            to_users: parseFloat(message.to_users),
+            message: message.message,
+            in_channel: message.in_channel
+        });
+    }else{
+        savedMessage = await messageRepository.insert({
+            from_users: parseFloat(message.from_users),
+            message: message.message,
+            in_channel: message.in_channel
+        });
+    }
 
-    console.log(savedMessage, "aaa");
+   if(message.to_users){
 
-    const notification = await notificationRepository.insert({
-        id_message: savedMessage.id,
-        from_user: message.from_users,
-        to_user: message.to_users
-    })
+       const notification = await notificationRepository.insert({
+           id_message: savedMessage?.id,
+           from_user: message.from_users,
+           to_user: message.to_users
+       })
+   }
+
 
     return savedMessage;
 }
