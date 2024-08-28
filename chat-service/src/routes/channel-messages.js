@@ -1,5 +1,6 @@
 const router = require("express").Router();
 const channelMessagesRepository = require("../repository/channel-messages-repository.js");
+const messageRepository = require("../repository/message-repository.js");
 const ws = require("../ws.js");
 
 const createChannelMessage = async(channelMessage) => {
@@ -7,6 +8,32 @@ const createChannelMessage = async(channelMessage) => {
         channel_id: channelMessage.channel_id,
         message_id: channelMessage.message_id
     })
+
+    const message = await messageRepository.select({id: channelMessage.message_id});
+    const messageSendData = {
+        type: "new_channel_message",
+        message: message[0],
+        channel_id: channelMessage.channel_id
+    }
+
+    const notificationSendData = {
+        type: "new_channel_notification",
+        channel_id: channelMessage.channel_id
+    }
+
+    const messageCountSendData = {
+        type: "new_channel_message_count",
+        channel_id: channelMessage.channel_id,
+        from_users: message[0].from_users
+    }
+
+    for(const [userId, wsConnection] of Object.entries(ws.connections)){
+        if(parseFloat(userId) !== messageSendData.message.from_users){
+            wsConnection.send(JSON.stringify(messageSendData));
+            wsConnection.send(JSON.stringify(notificationSendData));
+            wsConnection.send(JSON.stringify(messageCountSendData));
+        }
+    }
 
     return channelMessage;
 }

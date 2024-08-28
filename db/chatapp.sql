@@ -26,9 +26,10 @@ CREATE TABLE notifications (
     id SERIAL PRIMARY KEY,
     id_message INTEGER REFERENCES messages(id),
     from_user INTEGER,
-    to_user INTEGER,
+    to_user INTEGER DEFAULT NULL,
     has_been_read INTEGER DEFAULT NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    channel_id INTEGER REFERENCES channels(id) DEFAULT NULL
 );
 
 CREATE TABLE channels (

@@ -8,17 +8,18 @@ const onMessage = (data, cookies)=>{
     const payload = JSON.parse(data);
     if(payload.type === "send_message"){
         (async () => {
+            let savedMessage;
             if(payload.data.to_user){
-                const savedMessage = await messages.createMessage({
-                     from_users: cookies.user,
-                     to_users: payload.data.to_user,
-                     text: payload.data.message,
-                     in_channel: payload.data.is_in_channel
+                 savedMessage = await messages.createMessage({
+                    from_users: cookies.user,
+                    to_users: payload.data.to_user,
+                    message: payload.data.message,
+                    in_channel: payload.data.is_in_channel
                  });
             }else {
-                const savedMessage = await messages.createMessage({
+                 savedMessage = await messages.createMessage({
                     from_users: cookies.user,
-                    text: payload.data.message,
+                    message: payload.data.message,
                     in_channel: payload.data.is_in_channel
                 });
             }

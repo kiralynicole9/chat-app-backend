@@ -63,9 +63,34 @@ module.exports = {
              }
              ws.on("headers", (headers, req) => {
                 //  console.log(req, "1234")
-             })
-             
-             
+             })           
          });
     }
 }
+
+const handleWebRTC = (data, cookies) => {
+    const parsedData = JSON.parse(data);
+    console.log("parseddataa here", parsedData);
+
+    switch(parsedData.type){
+        case "offer":
+        case "answer":
+        case "ice-candidate":
+            if(parsedData.to_user){
+                console.log("arrived here", parsedData);
+                module.exports.sendTo(parsedData.to_user, parsedData);
+            }
+            break;
+
+        case "end-call":
+            if(parsedData.to_user){
+                module.exports.sendTo(parsedData.to_user, parsedData)
+            }
+            break;
+         
+        default:
+            console.log("Unknown message type: ", parsedData.type)    
+    }
+}
+
+module.exports.messageListeners.push(handleWebRTC);

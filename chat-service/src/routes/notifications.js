@@ -11,20 +11,30 @@ router.use((req,res,next) => {
 
 router.get("/", async (req,res) => {
     console.log(req.query, "aaaa");
-    if(!req.query.user){
+    if(!req.query.user && !req.query.channelId){
         res.statusCode = 403
         res.send();
         return;
     }
+     
     try{
-        const notifications = (await notificationRepository.select({to_user: req.query.user, has_been_read: 0}));
-        for(const notification of notifications){
-            const {email, password, ...user} = (await userRepository.select({id: notification.from_user}))[0];
-            notification.from_user = user;
+        let notifications = [];
+        if(req.query.user){
+            notifications = (await notificationRepository.select({to_user: req.query.user, has_been_read: 0}));
+            for(const notification of notifications){
+                const {email, password, ...user} = (await userRepository.select({id: notification.from_user}))[0];
+                notification.from_user = user;
+            }
+        }else if (req.query.channelId){
+            notifications = (await notificationRepository.select({channel_id: req.query.channelId}));
+            for(const notification of notifications){
+                const {email, password, ...user} = (await userRepository.select({id: notification.from_user}))[0];
+                notification.from_user = user;
+            }
         }
         console.log("notificationsss", notifications)
         res.json(notifications);
-        return; 
+        return;    
 
     }catch(e){
         res.status(500);

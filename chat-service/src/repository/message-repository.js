@@ -47,14 +47,21 @@ messageRepository.createMessage = async (message) => {
             in_channel: message.in_channel
         });
     }
-
+    let notification;
    if(message.to_users){
 
-       const notification = await notificationRepository.insert({
+        notification = await notificationRepository.insert({
            id_message: savedMessage?.id,
            from_user: message.from_users,
            to_user: message.to_users
        })
+   }else{
+        notification = await notificationRepository.insert({
+            id_message: savedMessage?.id,
+            from_user: message.from_users,
+            channel_id: message.channel_id
+        })
+        console.log(notification, "in channel")
    }
 
 
