@@ -51,3 +51,10 @@ CREATE TABLE channel_messages (
     PRIMARY KEY (channel_id, message_id)
 );
   
+CREATE TABLE reactions(
+    id SERIAL PRIMARY KEY,
+    message_id INTEGER REFERENCES messages(id),
+    user_id INTEGER REFERENCES users(id),
+    reaction VARCHAR(50),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);

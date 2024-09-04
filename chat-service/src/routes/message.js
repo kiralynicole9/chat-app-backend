@@ -114,6 +114,7 @@ router.post("/", async (req,res) => {
 router.patch("/:id", async (req, res) => {
     const {...result} = req.body;
     const {id} = req.params;
+    console.log(id, result, "patch channel");
     if(result.has_been_read !== undefined){
         result.has_been_read = !!result.has_been_read+0;
     }
@@ -122,6 +123,7 @@ router.patch("/:id", async (req, res) => {
         ...result
     })
     const message = (await messages.select({id}))[0]
+    console.log(message, "kpl")
     res.send(message);
 })
 

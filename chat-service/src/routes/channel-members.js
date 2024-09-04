@@ -35,6 +35,16 @@ router.post("/", async(req,res) => {
         type: "new_channel",
         channel:channelDetails
     });
+
+    const members = await channelMembersRepository.select({channel_id});
+    console.log(members, "iii");
+
+    for(const member of members){
+        ws.sendTo(member.user_id, {
+            type: "update_channel_members",
+            members: members
+        })
+    }
     console.log(channel, "mmmm");
     res.json(channel);
 

@@ -10,6 +10,7 @@ const messageRouter = require("./routes/message");
 const notificationRouter = require("./routes/notifications");
 const channelMembersRouter = require("./routes/channel-members")
 const channelsRouter = require("./routes/channels")
+const reactionsRouter = require("./routes/reactions");
 const channelMessagesRouter = require("./routes/channel-messages")
 const repository = require("./repository/repository");
 const inMemoryDB = require("./databases/inMemoryDB");
@@ -18,6 +19,7 @@ const messageRepository = require("./repository/message-repository");
 const channelsRepository = require("./repository/channels-repository")
 const channelMembersRepository = require("./repository/channel-members-repository")
 const channelMessagesRepository = require("./repository/channel-messages-repository");
+const reactionsRepository = require("./repository/reactions-repository")
 const ws  = require("./ws");
 
 const app = express();
@@ -60,3 +62,4 @@ app.use("/channels", channelsRouter)
 app.use("/channel-members", channelMembersRouter);
 app.use("/channel-messages", channelMessagesRouter)
 app.use("/logout", logoutRouter);
+app.use("/reactions", reactionsRouter);
