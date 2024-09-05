@@ -77,7 +77,6 @@ const handleWebRTC = (data, cookies) => {
         case "answer":
         case "ice-candidate":
             if(parsedData.to_user){
-                console.log("arrived here", parsedData);
                 module.exports.sendTo(parsedData.to_user, parsedData);
             }
             break;

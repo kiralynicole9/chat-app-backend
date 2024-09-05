@@ -58,3 +58,11 @@ CREATE TABLE reactions(
     reaction VARCHAR(50),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+
+CREATE TABLE channel_messages_status(
+    message_id INTEGER REFERENCES messages(id),
+    user_id INTEGER REFERENCES users(id),
+    has_been_read INTEGER DEFAULT NULL,
+    PRIMARY KEY (message_id, user_id)
+);
+
