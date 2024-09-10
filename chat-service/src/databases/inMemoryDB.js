@@ -1,4 +1,4 @@
-const { init, select } = require("./postgres")
+const { init, select, updateWithCompositeKey } = require("./postgres")
 
 const inMemoryDb = {
     users : [],
@@ -29,5 +29,7 @@ module.exports = {
                 })
             }
         })
-    }
+    },
+
+    
 }

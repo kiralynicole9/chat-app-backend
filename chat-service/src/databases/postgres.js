@@ -68,9 +68,21 @@ module.exports = {
     async update(table, data) {
         const {id, ...restData} = data;
         const fields = Object.keys(restData);
+        console.log(restData, fields, "bbb")
         console.log(`UPDATE ${this.db(table)} SET ${this.db(restData, fields)} WHERE id = ${id}`);
         return this.db`UPDATE ${this.db(table)} SET ${this.db(restData, fields)} WHERE id = ${id}`;
-    }
+    },
+
+    async updateWithCompositeKey(table, keys, data) {
+        const fields = Object.keys(data);
+        console.log(data, fields, "ccc")
+        const keyConditions = Object.entries(keys)
+            // .map(([key, value]) => `${key}=${value}`)
+            // .join(' AND ');
     
+        // const query = this.db`UPDATE ${this.db(table)} SET ${this.db(data, fields)} WHERE ${keyConditions}`;
+        // console.log(query); 
     
+        return this.db`UPDATE ${this.db(table)} SET ${this.db(data, fields)} WHERE message_id = ${keyConditions[0][1]} AND user_id = ${keyConditions[1][1]}`;
+    } 
 }

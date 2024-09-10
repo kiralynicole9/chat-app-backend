@@ -66,3 +66,12 @@ CREATE TABLE channel_messages_status(
     PRIMARY KEY (message_id, user_id)
 );
 
+CREATE TABLE channel_notification_status(
+    notification_id INTEGER REFERENCES notifications(id),
+    user_id INTEGER REFERENCES users(id),
+    has_been_read INTEGER DEFAULT NULL,
+    PRIMARY KEY (notification_id, user_id)
+);
+
+
+

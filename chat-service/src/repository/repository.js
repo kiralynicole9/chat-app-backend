@@ -1,3 +1,4 @@
+
 module.exports = {
 
     db: {},
@@ -7,6 +8,9 @@ module.exports = {
     },
     update() {
         throw new Error('Update not implemented in Repository');
+    },
+    updateWithCompositeKey(){
+        throw new Error('UpdateWithCompositeKey not implemented in Repository');
     },
     delete() {
         throw new Error('Delete not implemented in Repository');

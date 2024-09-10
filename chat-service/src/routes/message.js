@@ -123,7 +123,6 @@ router.patch("/:id", async (req, res) => {
         ...result
     })
     const message = (await messages.select({id}))[0]
-    console.log(message, "kpl")
     res.send(message);
 })
 
