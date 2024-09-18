@@ -84,5 +84,19 @@ module.exports = {
         // console.log(query); 
     
         return this.db`UPDATE ${this.db(table)} SET ${this.db(data, fields)} WHERE message_id = ${keyConditions[0][1]} AND user_id = ${keyConditions[1][1]}`;
+    },
+    
+    async updateWithCompositeKeyNotif(table, keys, data) {
+        const fields = Object.keys(data);
+        console.log(data, fields, "ccc")
+        const keyConditions = Object.entries(keys)
+            // .map(([key, value]) => `${key}=${value}`)
+            // .join(' AND ');
+    
+        // const query = this.db`UPDATE ${this.db(table)} SET ${this.db(data, fields)} WHERE ${keyConditions}`;
+        // console.log(query); 
+    
+        return this.db`UPDATE ${this.db(table)} SET ${this.db(data, fields)} WHERE notification_id = ${keyConditions[0][1]} AND user_id = ${keyConditions[1][1]}`;
     } 
+
 }

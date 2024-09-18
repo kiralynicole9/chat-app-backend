@@ -12,6 +12,9 @@ module.exports = {
     updateWithCompositeKey(){
         throw new Error('UpdateWithCompositeKey not implemented in Repository');
     },
+    updateWithCompositeKeyNotif(){
+        throw new Error('UpdateWithCompositeKeyNotif not implemented in Repository');
+    },
     delete() {
         throw new Error('Delete not implemented in Repository');
     },

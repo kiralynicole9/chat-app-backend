@@ -14,8 +14,8 @@ notificationStatusRepository.update = async function(data){
     return this.db.update('channel_notification_status', data);
 }
 
-notificationStatusRepository.updateWithCompositeKey = async function(keys, data){
-    return this.db.updateWithCompositeKey('channel_notification_status', keys, data);
+notificationStatusRepository.updateWithCompositeKeyNotif = async function(keys, data){
+    return this.db.updateWithCompositeKeyNotif('channel_notification_status', keys, data);
 }
 
 notificationStatusRepository.delete = async function(where){

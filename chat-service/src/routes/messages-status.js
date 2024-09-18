@@ -12,13 +12,13 @@ const createMessageStatus = async(messageStatus) => {
         user_id: messageStatus.user_id
     });
 
-    const notificationId = await notificationRepository.select({id_message: messageStatus.message_id})[0];
-    console.log(notificationId, "777");
+    const notificationId = (await notificationRepository.select({id_message: messageStatus.message_id}))[0];
+    console.log(notificationId.id, "777");
 
-    // await notificationStatusRepository.insert({
-    //     notification_id: ,
-    //     user_id: messageStatus.user_id
-    // })
+    await notificationStatusRepository.insert({
+        notification_id: notificationId.id,
+        user_id: messageStatus.user_id
+    })
 
     const channelId = (await channelMessagesRepository.select({message_id: messageStatus.message_id}))[0];
     console.log(channelId.channel_id, "+++");
