@@ -102,6 +102,7 @@ router.get("/:id", async(req, res) => {
         return;
     }
     const allMessages = await messages.select();
+    console.log(allMessages, "the messages")
     res.json(allMessages);
 })
 
@@ -129,6 +130,7 @@ router.patch("/:id", async (req, res) => {
 router.get("/count/:userId", async(req,res) => {
     const {userId} = req.params;
     const results = await messages.countFromUserMessages(userId)
+    console.log(results, "nb of messages")
     res.send(results)
 })
 

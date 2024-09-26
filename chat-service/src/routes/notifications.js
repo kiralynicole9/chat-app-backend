@@ -3,6 +3,7 @@ const notificationRepository = require('../repository/notification-repository.js
 const userRepository = require("../repository/user-repository.js")
 const channelMembersRepository = require("../repository/channel-members-repository.js");
 const ws = require("../ws.js");
+const notificationStatusRepository = require("../repository/notification-status-repository.js");
 
 
 router.use((req,res,next) => {
@@ -21,13 +22,30 @@ router.get("/", async (req,res) => {
     try{
         let notifications = [];
         if(req.query.user){
-            notifications = (await notificationRepository.select({to_user: req.query.user, has_been_read: 0}));
+            notifications = (await notificationRepository.select({to_user: req.query.user, has_been_read: null}));
             for(const notification of notifications){
                 const {email, password, ...user} = (await userRepository.select({id: notification.from_user}))[0];
                 notification.from_user = user;
             }
+            console.log("enters here", notifications);
         }else if (req.query.channelId){
-            notifications = (await notificationRepository.select({channel_id: req.query.channelId}));
+            const _notifications = (await notificationRepository.select({channel_id: req.query.channelId}));
+            console.log(_notifications, "jjj")
+
+            for(const notif of _notifications){
+                console.log(notif, "222")
+                if(notif.from_user != req.query.userId){
+                    const notifStatus = (await notificationStatusRepository.select({notification_id: notif.id, user_id: req.query.userId}))[0];
+                    console.log(notifStatus, "++");
+    
+                    if(notifStatus.has_been_read == null){
+                        notifications.push(notif);
+                    }
+
+                }    
+            }
+            console.log(notifications, "haha");
+            
             for(const notification of notifications){
                 const {email, password, ...user} = (await userRepository.select({id: notification.from_user}))[0];
                 notification.from_user = user;

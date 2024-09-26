@@ -8,22 +8,27 @@ router.use((req,res,next) => {
     next();
 })
 
-router.patch("/:notification_id/:userId", async(req, res) => {
-    const {notification_id, userId} = req.params;
+router.patch("/read/:notifId/:userId", async(req, res) => {
+    const {notifId, userId} = req.params;
     const {...result} = req.body;
 
     if(result.has_been_read !== undefined){
         result.has_been_read = !!result.has_been_read+0;
     }
 
-    await notificationStatusRepository.updateWithCompositeKeyNotif({notification_id: notification_id, user_id: userId}, {
+    await notificationStatusRepository.updateWithCompositeKeyNotif({notification_id: notifId, user_id: userId}, {
         ...result
     }) 
 
-    const notifStatus = (await notificationStatusRepository.select({message_id: notification_id, user_id: userId}))[0]
+    ws.sendTo(userId, {
+        type: "read_notification"
+    })
+
+    const notifStatus = (await notificationStatusRepository.select({notification_id: notifId, user_id: userId}))[0]
     console.log(notifStatus, "yupi")
     res.send(notifStatus);
 })
+
 
 
 module.exports = router
