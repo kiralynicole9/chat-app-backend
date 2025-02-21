@@ -1,11 +1,14 @@
 const router = require("express").Router();
 const usersRepository = require("../repository/user-repository.js");
 const ws = require("../ws.js");
+const jwt = require ("jsonwebtoken");
 
 router.use((req,res,next) => {
     console.log("loginRouter: ");
     next();
 });
+
+const SECRET_KEY = "my_secret_key";
 
 router.post("/", async (req,res) => {
     //broadcast all users (ws) about this login user status
@@ -19,6 +22,18 @@ router.post("/", async (req,res) => {
     if(!user.length) {
         res.sendStatus(401);
     }
+
+    const token = jwt.sign(
+        {
+            userId: user[0].id,
+            email: user[0].email
+        },
+        SECRET_KEY,
+        {
+            expiresIn: "1h"
+        }
+    );
+
     ws.broadcast({
         type: "user_online",
         data: {
@@ -29,7 +44,10 @@ router.post("/", async (req,res) => {
         id: user[0]?.id,
         active: 1
     })
-    res.send(user[0]);
+    res.send({
+        user: user[0],
+        token
+    });
 })
 
 

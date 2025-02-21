@@ -22,6 +22,12 @@ CREATE TABLE messages (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
+CREATE TABLE channels (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(50) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
 CREATE TABLE notifications (
     id SERIAL PRIMARY KEY,
     id_message INTEGER REFERENCES messages(id),
@@ -32,11 +38,7 @@ CREATE TABLE notifications (
     channel_id INTEGER REFERENCES channels(id) DEFAULT NULL
 );
 
-CREATE TABLE channels (
-    id SERIAL PRIMARY KEY,
-    name VARCHAR(50) NOT NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
+
 
 CREATE TABLE channel_members(
     user_id INTEGER REFERENCES users(id),

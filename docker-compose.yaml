@@ -18,4 +18,4 @@ services:
   adminer:
     image: adminer
     ports:
-      - "8080:8080"
+      - "9090:8080"
